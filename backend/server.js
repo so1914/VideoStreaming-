@@ -23,7 +23,10 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // CORS setup
 const corsOptions = {
-  origin: process.env.FRONTEND_URL?.split(',') || ['http://localhost:5173'],
+  origin: [
+    'http://localhost:5173',
+    'https://video-streaming-three-rho.vercel.app'
+  ],
   credentials: true
 };
 app.use(cors(corsOptions));
