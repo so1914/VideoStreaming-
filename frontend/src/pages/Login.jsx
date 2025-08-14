@@ -1,26 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Lock, Video, MessageCircle, Sparkles } from 'lucide-react';
-import Languages from '../component/languages';
-import { useLanguage } from '../context/LanguageContext';
 
-const Login = () => {
-  const { currentLanguage, changeLanguage, t } = useLanguage();
-  
-  return (
-    <div className="relative">
-      <div className="absolute top-4 right-4 z-20">
-        <Languages 
-          currentLanguage={currentLanguage} 
-          onLanguageChange={changeLanguage} 
-        />
-      </div>
-      <LoginPage />
-    </div>
-  );
-};
-
-function LoginPage() {
-  const { t } = useLanguage();
+export default function Login() {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
@@ -87,7 +68,7 @@ function LoginPage() {
             <h1 className="text-3xl font-bold text-white mb-2">
               Stream<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Connect</span>
             </h1>
-            <p className="text-gray-300 text-sm">{t('tagline') || 'Connect, Chat, Stream Together'}</p>
+            <p className="text-gray-300 text-sm">Connect, Chat, Stream Together</p>
           </div>
 
           {/* Login form */}
@@ -95,7 +76,7 @@ function LoginPage() {
             {/* User ID input */}
             <div className="space-y-2">
               <label htmlFor="userId" className="text-sm font-medium text-gray-200 block text-left">
-                {t('userId') || 'User ID'}
+                User ID
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -108,7 +89,7 @@ function LoginPage() {
                   value={formData.userId}
                   onChange={handleInputChange}
                   className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-                  placeholder={t('enterUserId') || "Enter your user ID"}
+                  placeholder="Enter your user ID"
                   required
                 />
               </div>
@@ -117,7 +98,7 @@ function LoginPage() {
             {/* Password input */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium text-gray-200 block text-left">
-                {t('password')}
+                Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -130,7 +111,7 @@ function LoginPage() {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full pl-12 pr-12 py-3 bg-white/10 border border-white rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
-                  placeholder={t('enterPassword')}
+                  placeholder="Enter your password"
                   required
                 /> 
               </div>
@@ -145,7 +126,7 @@ function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4  bg-white/10 border-white/20 rounded focus:ring-2"
                 />
-                <span className="ml-2 text-sm text-white">{t('rememberMe') || 'Remember me'}</span>
+                <span className="ml-2 text-sm text-white">Remember me</span>
               </label>
               <a href="#" className="text-sm text-white transition-colors duration-200">
                 {t('forgotPassword') || 'Forgot password?'}
@@ -252,4 +233,3 @@ function LoginPage() {
     </div>
   );
 }
-export default Login;
