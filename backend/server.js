@@ -18,28 +18,42 @@ await connectDB();
 
 // Security & logging
 app.set('trust proxy', 1);
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginEmbedderPolicy: false
+}));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// CORS setup - Comprehensive fix
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://video-streaming-three-rho.vercel.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+// CORS setup - Bulletproof solution
+const allowedOrigins = [
+  'https://video-streaming-three-rho.vercel.app',
+  'https://video-streaming-git-main-sonam-sonis-projects.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 
-// Also use the cors middleware as backup
-app.use(cors({
-  origin: 'https://video-streaming-three-rho.vercel.app',
-  credentials: true
-}));
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Set CORS headers for all requests
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('OPTIONS request handled for:', origin);
+    return res.status(200).end();
+  }
+  
+  console.log('Request from origin:', origin, 'Method:', req.method, 'Path:', req.path);
+  next();
+});
 
 // Body parsing
 app.use(express.json({ limit: '1mb' }));
