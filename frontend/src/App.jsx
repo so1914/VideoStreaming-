@@ -1,12 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom"; 
+import Login from "./pages/Login.jsx";
+import SignUp from "./pages/Signup.jsx";
+import { LanguageProvider } from './context/LanguageContext';
 
-export default function App() {
+function AppContent() {
   return (
-    <div className="flex items-center justify-center h-screen bg-indigo-600 text-white">
-      <h1 className="text-4xl font-bold">Tailwind v4 is working 🚀</h1>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>} />
+
+      </Routes>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <Router> 
+        <AppContent />
+      </Router>
+    </LanguageProvider>
   );
 }
+
+export default App;
