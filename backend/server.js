@@ -21,22 +21,25 @@ app.set('trust proxy', 1);
 app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// CORS setup - Simplified and robust
-app.use(cors({
-  origin: 'https://video-streaming-three-rho.vercel.app',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
-// Add CORS headers for preflight requests
-app.options('*', (req, res) => {
+// CORS setup - Comprehensive fix
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://video-streaming-three-rho.vercel.app');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
 });
+
+// Also use the cors middleware as backup
+app.use(cors({
+  origin: 'https://video-streaming-three-rho.vercel.app',
+  credentials: true
+}));
 
 // Body parsing
 app.use(express.json({ limit: '1mb' }));
@@ -63,10 +66,18 @@ app.get('/', (req, res) => {
 
 // CORS test endpoint
 app.get('/api/test-cors', (req, res) => {
+  console.log('CORS test endpoint hit');
+  console.log('Origin:', req.headers.origin);
+  console.log('Headers:', req.headers);
+  
   res.json({ 
     message: 'CORS is working!', 
     origin: req.headers.origin,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    corsHeaders: {
+      'Access-Control-Allow-Origin': res.getHeader('Access-Control-Allow-Origin'),
+      'Access-Control-Allow-Credentials': res.getHeader('Access-Control-Allow-Credentials')
+    }
   });
 });
 
