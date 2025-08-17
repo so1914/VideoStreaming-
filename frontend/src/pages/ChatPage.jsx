@@ -17,7 +17,7 @@ import {
 import "stream-chat-react/dist/css/v2/index.css";
 
 import toast from "react-hot-toast";
-import ChatLoader from "../components/ChatLoader";
+import ChatLoader from "../components/CLoader";
 import CallButton from "../components/CButton";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
